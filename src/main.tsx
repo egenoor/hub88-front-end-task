@@ -1,10 +1,16 @@
-import { StrictMode } from 'react'
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 import { createRoot } from 'react-dom/client'
-import './index.css'
 import App from './App.tsx'
+import './index.css'
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
+const client = new ApolloClient({
+  uri: 'https://countries.trevorblades.com/',
+  cache: new InMemoryCache(),
+})
+const root = document.getElementById('root')!
+
+createRoot(root).render(
+  <ApolloProvider client={client}>
     <App />
-  </StrictMode>,
+  </ApolloProvider>
 )
