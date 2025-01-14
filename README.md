@@ -1,10 +1,9 @@
 # Hub88 Front-End Task
 
 ## Created with
-```
 Node.js v22.12.0
+
 React v18
-```
 
 ## Setup
 ```
