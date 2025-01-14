@@ -1,11 +1,12 @@
-import { MockedProvider } from '@apollo/client/testing'
+import { MockedProvider, MockedResponse } from '@apollo/client/testing'
 import '@testing-library/jest-dom'
 import { fireEvent, render, screen } from '@testing-library/react'
 import { GraphQLError } from 'graphql'
-import { GET_COUNTRIES } from '../../queries/queries'
+import { GET_COUNTRIES } from '../../graphql/queries'
 import CountriesView from '../../views/countries.view'
 
-const mocks = [
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const mocks: MockedResponse<any, any>[] = [
   {
     request: {
       query: GET_COUNTRIES,
@@ -27,7 +28,8 @@ const mocks = [
   },
 ]
 
-const failureMock = [
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const failureMock: MockedResponse<any, any>[] = [
   {
     request: {
       query: GET_COUNTRIES,
@@ -38,9 +40,9 @@ const failureMock = [
   },
 ]
 
-const setup = () => {
+const setup = (apiMocks = mocks) => {
   render(
-    <MockedProvider mocks={mocks} addTypename={false}>
+    <MockedProvider mocks={apiMocks} addTypename={false}>
       <CountriesView />
     </MockedProvider>
   )
@@ -70,11 +72,7 @@ describe('successful countries view flow', () => {
   })
 
   it('should render empty table with no data', async () => {
-    render(
-      <MockedProvider mocks={[]} addTypename={false}>
-        <CountriesView />
-      </MockedProvider>
-    )
+    setup([])
     expect(screen.queryByText('Andorra')).not.toBeInTheDocument()
     expect(screen.queryByText('United Arab Emirates')).not.toBeInTheDocument()
     expect((await screen.findAllByText('No data')).length).toBe(2)
@@ -116,8 +114,8 @@ describe('successful countries view flow', () => {
       expect(await screen.findByText(result.countryCode)).toBeDefined()
     }
 
-    fireEvent.change(filterInput, { target: { value: 'AD' } })
-    expect((filterInput as HTMLInputElement).value).toBe('AD')
+    fireEvent.change(filterInput, { target: { value: 'ad' } })
+    expect((filterInput as HTMLInputElement).value).toBe('ad')
     expect(
       await screen.findByText(expectedResults[0].countryCode)
     ).toBeDefined()
@@ -126,11 +124,7 @@ describe('successful countries view flow', () => {
 
 describe('failed countries view flow', () => {
   it('should render empty table and should render message if api throws error', async () => {
-    render(
-      <MockedProvider mocks={failureMock} addTypename={false}>
-        <CountriesView />
-      </MockedProvider>
-    )
+    setup(failureMock)
     expect((await screen.findAllByText('No data')).length).toBe(2)
     expect(await screen.findByText('Error!')).toBeDefined()
   })

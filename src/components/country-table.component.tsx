@@ -1,11 +1,7 @@
 import { Table } from 'antd'
-import { Country } from '../queries/query.interfaces'
+import { Country } from '../graphql/query.interfaces'
 
-export interface CountryTableProps {
-  dataSource: Country[]
-}
-
-export default function CountryTable({ dataSource }: CountryTableProps) {
+export default function CountryTable(props: { dataSource: Country[] }) {
   const columns = [
     {
       title: 'Country name',
@@ -19,5 +15,5 @@ export default function CountryTable({ dataSource }: CountryTableProps) {
     },
   ]
 
-  return <Table dataSource={dataSource} columns={columns} />
+  return <Table dataSource={props.dataSource} columns={columns} />
 }

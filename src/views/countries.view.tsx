@@ -2,8 +2,8 @@ import { useQuery } from '@apollo/client'
 import { Col, Flex, Input, Row, Skeleton } from 'antd'
 import { useEffect, useState } from 'react'
 import CountryTable from '../components/country-table.component'
-import { GET_COUNTRIES } from '../queries/queries'
-import { Country, GetCountriesQuery } from '../queries/query.interfaces'
+import { GET_COUNTRIES } from '../graphql/queries'
+import { Country, GetCountriesQuery } from '../graphql/query.interfaces'
 
 export default function CountriesView() {
   const { loading, data, error } = useQuery<GetCountriesQuery>(GET_COUNTRIES)
@@ -13,7 +13,9 @@ export default function CountriesView() {
   ) => {
     setFilteredData(
       data?.countries.filter((country) => {
-        return country.code.includes(e.target.value ?? '')
+        return country.code
+          .toLowerCase()
+          .includes(e.target.value.toLowerCase() ?? '')
       }) ?? []
     )
   }
