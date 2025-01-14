@@ -1,6 +1,6 @@
-import './App.css'
-import { CountryTable } from './components/country-table'
+import './app.css'
+import CountriesView from './views/countries.view'
 
 export default function App() {
-  return <CountryTable />
+  return <CountriesView />
 }
